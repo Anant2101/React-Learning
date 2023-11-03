@@ -1,0 +1,60 @@
+import React, { useState } from "react";
+
+const Dynamic = () => {
+  const [rows, setRows] = useState([]);
+  const addRow = () => {
+    const newObj = {};
+    setRows([...rows, newObj]);
+  };
+  const deleteRow = (id) => {
+    const newArr = rows.filter((i, index) => {
+      return id != index;
+    });
+    setRows(newArr);
+  };
+
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col-sm-6">
+          <button onClick={addRow} className="btn btn-success mt-4">
+            Add row
+          </button>
+        </div>
+        <div className="col-sm-6">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Row Number</th>
+                <th>Name</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((items, index) => {
+                return (
+                  <tr>
+                    <td>Row: {index + 1}</td>
+                    <td>
+                      <input value={items.value} type="text"></input>
+                    </td>
+                    <td>
+                      <button
+                        onClick={() => deleteRow(index)}
+                        className="btn btn-danger btn-sm ml-2"
+                      >
+                        Delete Row
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Dynamic;
