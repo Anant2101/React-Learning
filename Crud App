@@ -1,0 +1,120 @@
+import React, { useState } from 'react';
+import { Form } from 'react-router-dom';
+
+
+const CrudTry = () => {
+    const [data ,setData] = useState({
+        "username" : "",
+        "userpassword" : "",
+        "useremail" : "",
+    })
+    const [arr, setArr] = useState([]);
+    const [sid ,setSid] = useState('')
+    const [flag , setFlag] = useState(true)
+
+    const inputHandler = (e) => {
+        setData({...data , [e.target.name] : e.target.value});
+    }
+    const addData = (e) => {
+        e.preventDefault();
+        setArr([...arr , data])
+        setData({
+            "username" : " ",
+            "userpassword" : " ",
+            "useremail" : " ",
+        })
+    }
+    const deleteUser = (id) => {
+       const newArr = arr.filter((i,index)=>{
+        return id != index
+       })
+       setArr(newArr)
+       setData({
+        "username" : " ",
+        "userpassword" : " ",
+        "useremail" : " ",
+    })
+    }
+    const editUser = (id) =>{
+        setSid(id)
+        const newArr = arr.filter((i,index)=>{
+            return id == index
+        })
+       data.username = newArr[0].username
+       data.useremail = newArr[0].useremail
+       data.userpassword = newArr[0].userpassword
+       setFlag(false)
+    }
+    const updateData =(e)=>{
+        e.preventDefault();
+        arr[sid] = data;
+        setData({
+            "username" : " ",
+            "userpassword" : " ",
+            "useremail" : " ",
+        })
+        setFlag(true)
+    }
+  return (
+    <>
+        <div className='container'>
+            <div className='row'>
+                <div className='col-sm-6'>
+                    <div className='alert alert-info'>
+                        <h2>Enter User Details</h2>
+                        <form onSubmit={(flag==true) ? addData : updateData }>
+                        <div className='form-group'>
+                            <label>Enter Name</label>
+                            <input type='text' value={data.username} className='form-control' name='username' onChange={inputHandler}/>
+                        </div>   
+                        <div className='form-group'>
+                            <label>Enter Email</label>
+                            <input type='email' value={data.useremail} className='form-control' name='useremail' onChange={inputHandler}/>
+                        </div>      
+                        <div className='form-group'>
+                            <label>Enter Password</label>
+                            <input type='password' value={data.userpassword} className='form-control' name='userpassword' onChange={inputHandler}/>
+                        </div> 
+                        {flag == true ? <button type='submit' className='btn btn-info'>Add User</button> : <button type='submit' className='btn btn-info'>Edit User</button> }                           
+                    </form>
+                    
+                    </div>
+                   
+                </div>
+                <div className='col-sm-6'>
+                <table className='table'>   
+                    <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Password</th>
+                                <th>Actions</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                           {arr.map((items, index)=>{
+                            return (
+                            
+                                <tr key={index}>
+                                    <td>{items.username}</td>
+                                    <td>{items.useremail}</td>
+                                    <td>{items.userpassword}</td>
+                                    <td>
+                                        <button onClick={()=>deleteUser(index)} className='btn btn-danger btn-sm mt-2'>Delete</button>
+                                        <button onClick={()=>editUser(index)} className='btn btn-info btn-sm mt-2 ml-2'>Edit</button>
+                                    </td>
+                                    
+                                </tr>
+                            
+                            )
+                           })}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div> 
+    </>
+  )
+}
+
+export default CrudTry
